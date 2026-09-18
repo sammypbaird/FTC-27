@@ -1,3 +1,17 @@
+# FTC-27 — BIOBUZZ (2026-2027)
+
+Robot code for our *FIRST* Tech Challenge team.
+
+## Game rules
+
+See **[GAME_MANUAL_SUMMARY.md](GAME_MANUAL_SUMMARY.md)** for a summary of the BIOBUZZ game: field, scoring, match
+timing, rules that affect our code, and terminology.
+
+The full official manual is at [`doc/BIOBUZZ_Competition_Manual_V1.pdf`](doc/BIOBUZZ_Competition_Manual_V1.pdf). It is
+the source of truth. Check the *FIRST* site for Team Updates.
+
+---
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the BIOBUZZ (2026-2027) competition season.
