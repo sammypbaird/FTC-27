@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.lessons;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,6 +15,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
  *
  * Robot config needed: one DC Motor named exactly "testMotor" on any port.
  */
+@Disabled
 @TeleOp(name = "L05 - Cold Open")
 public class Lesson05_ColdOpen extends LinearOpMode {
 

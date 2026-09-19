@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.lessons;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -29,6 +30,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
  * toggled, on purpose -- edge detection isn't taught until Lesson 07, so
  * this file doesn't need it to stay simple and reliable live.
  */
+@Disabled
 @TeleOp(name = "L05 - Motor Playground", group = "Lesson 05 - Motors")
 public class Lesson05_MotorPlayground extends LinearOpMode {
 
