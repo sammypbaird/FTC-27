@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.finn.subsystems;
+package org.firstinspires.ftc.teamcode.fcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -30,7 +30,7 @@ public class Driver {
         double axial = -gamepad.left_stick_y; //-1 to 1
         double lateral = gamepad.left_stick_x; //-1 to 1
         double yaw = gamepad.right_stick_x; //-1 to 1
-        if(gamepad.xWasPressed(){
+        if(gamepad.xWasPressed){
             slowModeEnabled = !slowModeEnabled;
         }
         drive(axial, lateral, yaw);
@@ -68,6 +68,7 @@ public class Driver {
     }
     public void addTelemetry(Telemetry telemetry){
         telemetry.addData("Max Power", "%.2f", maxPower);
+        telemetry.addData("SlowMode?", "%.2f", slowModeEnabled);
     }
     public void stop(){
         frontLeft.setPower(0);

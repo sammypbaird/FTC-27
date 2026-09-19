@@ -1,12 +1,11 @@
-package org.firstinspires.ftc.teamcode.finn.opsmodes;
+package org.firstinspires.ftc.teamcode.fcode.opsmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.finn.subsystems.Driver;
+import org.firstinspires.ftc.teamcode.fcode.subsystems.Driver;
 
-@TeleOp(name = "Finn - MainTeleOp", group = "Competition")
+@TeleOp(name = "F - MainTeleOp", group = "Competition")
 public class MainTeleOp extends LinearOpMode {
     private Driver driver;
 
