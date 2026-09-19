@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.lessons;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -26,6 +27,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  *   (neither)  stopped
  */
 @TeleOp(name = "L06 - Continuous Servo", group = "Lesson 06 - Servos")
+@Disabled
 public class Lesson06_ContinuousServoDemo extends LinearOpMode {
 
     @Override

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.lessons;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -22,6 +23,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  *   D-pad up      position += 0.01
  *   D-pad down    position -= 0.01
  */
+@Disabled
 @TeleOp(name = "L06 - Servo Tuner", group = "Lesson 06 - Servos")
 public class Lesson06_ServoTuner extends LinearOpMode {
 

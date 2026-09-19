@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.lessons;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -18,6 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  *
  * No robot config needed -- this OpMode only reads the gamepad.
  */
+@Disabled
 @TeleOp(name = "L07 - Telemetry Mirror", group = "Lesson 07 - Gamepad")
 public class Lesson07_TelemetryMirror extends LinearOpMode {
 

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.lessons;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -28,6 +29,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Robot config needed: one Servo named exactly "testServo" (Lesson 06's
  * servo works fine, still wired up).
  */
+@Disabled
 @TeleOp(name = "L07 - Held vs Toggle", group = "Lesson 07 - Gamepad")
 public class Lesson07_HeldVsToggleDemo extends LinearOpMode {
 
