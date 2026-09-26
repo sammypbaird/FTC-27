@@ -81,3 +81,6 @@ lint/tmp/
 # lint/reports/
 # Limelight training datasets (large binaries; keep them in Roboflow instead)
 limelight/datasets/
+
+# Limelight snapshots downloaded for labeling
+limelight/snapshots/
