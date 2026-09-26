@@ -30,7 +30,7 @@ public class Driver {
         double axial = -gamepad.left_stick_y; //-1 to 1
         double lateral = gamepad.left_stick_x; //-1 to 1
         double yaw = gamepad.right_stick_x; //-1 to 1
-        if(gamepad.xWasPressed){
+        if(gamepad.xWasPressed()){
             slowModeEnabled = !slowModeEnabled;
         }
         drive(axial, lateral, yaw);
@@ -77,6 +77,6 @@ public class Driver {
         backRight.setPower(0);
     }
     public void setSlowMode(boolean enabled){
-        this.enabled = enabled;
+        this.slowModeEnabled = enabled;
     }
 }
