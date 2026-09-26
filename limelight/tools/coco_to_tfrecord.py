@@ -6,11 +6,13 @@ Use this when Roboflow won't let you export a dataset as TFRecord directly.
 It needs only plain Python 3 (no TensorFlow).
 
 USAGE
-    python coco_to_tfrecord.py <coco_export.zip or folder> <output.zip> [--rename OLD=NEW ...]
+    python coco_to_tfrecord.py <coco_export.zip or folder> <output.zip>
+        [--rename OLD=NEW ...] [--exclude FILENAME_PREFIX ...]
 
 EXAMPLE
     python coco_to_tfrecord.py "FTC-BioBuzz.v1i.coco.zip" ftc-biobuzz-tfrecord.zip ^
-        --rename Yellow=pollen --rename Red=red_nectar --rename Blue=blue_nectar
+        --rename Yellow=pollen --rename Red=red_nectar --rename Blue=blue_nectar ^
+        --exclude aug_
 
 INPUT (what Roboflow's COCO export looks like)
     train/  _annotations.coco.json + images
@@ -140,6 +142,16 @@ def build_classes(coco_by_split, renames):
     return names
 
 
+def drop_excluded(coco, exclude):
+    """Remove images whose file name starts with any of the exclude prefixes."""
+    if not exclude:
+        return coco
+    kept = [i for i in coco["images"] if not i["file_name"].startswith(tuple(exclude))]
+    kept_ids = {i["id"] for i in kept}
+    return dict(coco, images=kept,
+                annotations=[a for a in coco["annotations"] if a["image_id"] in kept_ids])
+
+
 def convert_split(root, split, coco, class_ids, renames, out_dir):
     cat_name = {c["id"]: renames.get(c["name"], c["name"]) for c in coco["categories"]}
     boxes_by_image = {}
@@ -201,6 +213,8 @@ def main():
     parser.add_argument("output", help="output .zip for the Limelight trainer")
     parser.add_argument("--rename", action="append", default=[], metavar="OLD=NEW",
                         help="rename a class, e.g. --rename Yellow=pollen (repeatable)")
+    parser.add_argument("--exclude", action="append", default=[], metavar="PREFIX",
+                        help="skip images whose file name starts with PREFIX, e.g. --exclude aug_ (repeatable)")
     args = parser.parse_args()
     renames = dict(r.split("=", 1) for r in args.rename)
 
@@ -212,7 +226,8 @@ def main():
                 z.extractall(os.path.join(tmp, "in"))
             root = os.path.join(tmp, "in")
 
-        coco_by_split = {s: c for s in SPLITS if (c := load_split(root, s)) is not None}
+        coco_by_split = {s: drop_excluded(c, args.exclude)
+                         for s in SPLITS if (c := load_split(root, s)) is not None}
         if not coco_by_split:
             sys.exit("No train/valid/test folders with _annotations.coco.json found in " + args.input)
 
