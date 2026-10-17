@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.Driver;
 
-@TeleOp(name = "MainTeleOp", group = "Competition")
+@TeleOp(name = "MainTeleOp")
 public class MainTeleOp extends LinearOpMode {
 
     private Driver driver;

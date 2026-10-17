@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opsmodes.teleop;
+package org.firstinspires.ftc.teamcode.opsmodes.test;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.subsystems.Driver;
 
-@TeleOp(name = "Turn to Pollen", group = "Test")
+@TeleOp(name = "Test - Turn to Pollen", group = "Test")
 public class TurnToPollenOp extends LinearOpMode {
 
     // Ignore detections the model isn't sure about

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opsmode.test;
+package org.firstinspires.ftc.teamcode.opsmodes.test;
 
 import com.pedropathing.math.Pose;
 import com.pedropathing.revhub.localizers.PinpointLocalizer;
@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 // Shows where the odometry thinks the robot is. Push the robot by hand.
 // Press A to reset back to (0, 0, 0).
-@TeleOp(name = "Pedro Test", group = "Test")
-public class PedroTestOpsMode extends LinearOpMode {
+@TeleOp(name = "Test - Pedro Where Am I", group = "Test")
+public class PedroTestWhereAmIOpsMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
