@@ -25,8 +25,9 @@ public class Intake {
     public Intake(HardwareMap hardwareMap) {
         motor = hardwareMap.get(DcMotorEx.class, "intake");
 
-        // If in() pushes pieces OUT, change FORWARD to REVERSE.
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        // REVERSE because in() was pushing pieces OUT (checked on the robot).
+        // If in() pushes pieces out again, change REVERSE back to FORWARD.
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Stop right away when we let go, so pieces don't keep rolling in.
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

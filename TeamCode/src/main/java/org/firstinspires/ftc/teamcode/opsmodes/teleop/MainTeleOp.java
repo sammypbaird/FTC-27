@@ -17,11 +17,12 @@ import org.firstinspires.ftc.teamcode.subsystems.Transfer;
  *   Left stick          drive and strafe
  *   Right stick (x)     turn
  *   X (press)           slow mode on/off
- *   Right bumper (hold) intake in + transfer toward the flywheel
- *   Left bumper (hold)  intake out (the transfer stays off)
- *   A (hold)            spin the flywheel
+ *   Right bumper (hold) intake in (the transfer stays off)
+ *   Left bumper (hold)  intake out + transfer out, to push pieces back out
+ *   A (hold)            spin the flywheel + transfer in, to launch
  *
  * The buttons are "hold-to-run": let go and that part stops.
+ * If the left bumper and A are both held, pushing out wins for the transfer.
  */
 @TeleOp(name = "MainTeleOp")
 public class MainTeleOp extends LinearOpMode {
@@ -49,17 +50,13 @@ public class MainTeleOp extends LinearOpMode {
             // Read the joysticks and move the wheels.
             driver.teleopDrive(gamepad1);
 
-            // Intake and transfer. Hold right bumper to pull pieces in and
-            // carry them to the flywheel. Hold left bumper to push pieces out.
+            // Intake. Hold right bumper to pull pieces in, left bumper to push them out.
             if (gamepad1.right_bumper) {
                 intake.in();
-                transfer.run();
             } else if (gamepad1.left_bumper) {
                 intake.out();
-                transfer.stop();   // the transfer only goes toward the flywheel
             } else {
                 intake.stop();
-                transfer.stop();
             }
 
             // Flywheel. Hold A to spin it.
@@ -67,6 +64,17 @@ public class MainTeleOp extends LinearOpMode {
                 flywheel.spin();
             } else {
                 flywheel.stop();
+            }
+
+            // Transfer. Two buttons use it, so ONE if/else decides what it does.
+            // (If each button set the transfer on its own, the second one would
+            // undo the first in the same loop.)
+            if (gamepad1.left_bumper) {
+                transfer.out();   // pushing out: carry pieces back to the intake
+            } else if (gamepad1.a) {
+                transfer.run();   // launching: feed pieces into the flywheel
+            } else {
+                transfer.stop();
             }
 
             // Send info to the telemetry screen

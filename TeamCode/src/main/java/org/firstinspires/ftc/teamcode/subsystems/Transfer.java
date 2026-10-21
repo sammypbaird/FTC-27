@@ -9,8 +9,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /*
  * This class is in charge of the transfer: the wheels that carry pieces
- * from the intake up to the flywheel. It only ever spins ONE way, toward
- * the flywheel, so there is no out() method.
+ * from the intake up to the flywheel. run() feeds pieces into the flywheel
+ * to launch them. out() runs backwards to push a piece back out through
+ * the intake.
  */
 public class Transfer {
 
@@ -25,8 +26,9 @@ public class Transfer {
     public Transfer(HardwareMap hardwareMap) {
         motor = hardwareMap.get(DcMotorEx.class, "transfer");
 
-        // If pieces move AWAY from the flywheel, change FORWARD to REVERSE.
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        // REVERSE because pieces were moving AWAY from the flywheel (checked on the robot).
+        // If they move away from the flywheel again, change REVERSE back to FORWARD.
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Stop right away, so a piece doesn't roll into the flywheel by itself.
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -36,6 +38,12 @@ public class Transfer {
     public void run() {
         motor.setPower(TRANSFER_POWER);
         state = "running";
+    }
+
+    /** Run backwards, carrying pieces back toward the intake. */
+    public void out() {
+        motor.setPower(-TRANSFER_POWER);
+        state = "out";
     }
 
     /** Stop the transfer. */
