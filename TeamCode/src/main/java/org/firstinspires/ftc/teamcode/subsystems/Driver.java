@@ -38,8 +38,8 @@ public class Driver {
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
 
         // Reverse the right wheels so they all go forward with a positive power
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     /**
