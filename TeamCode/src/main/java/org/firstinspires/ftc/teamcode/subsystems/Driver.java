@@ -37,7 +37,8 @@ public class Driver {
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
 
-        // Reverse the right wheels so they all go forward with a positive power
+        // Reverse the left wheels so they all go forward with a positive power.
+        // (Pedro's Constants.java must use the same directions.)
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
     }
