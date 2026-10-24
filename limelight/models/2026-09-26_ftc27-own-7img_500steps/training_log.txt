@@ -1,0 +1,95 @@
+============================================================
+LIMELIGHT MODEL TRAINER
+============================================================
+
+Job ID: ffd99947
+Spinning up 1 NVIDIA H100 GPU...
+
+Steps: 500, Batch size: 16, Platform: coral
+
+STAGE 1/6: Downloading dataset...
+  Downloading from Google Drive...
+  Downloaded: 0.11 MB
+  Extracting dataset...
+  Archive contains 8 files
+  Scanning for TFRecords and label map...
+    Found label map: test/FTC27-BioBuzz-HVCB_label_map.pbtxt
+    Found train record: train/FTC27-BioBuzz-HVCB.tfrecord
+    Found label map: train/FTC27-BioBuzz-HVCB_label_map.pbtxt
+    Found val record: valid/FTC27-BioBuzz-HVCB.tfrecord
+    Found label map: valid/FTC27-BioBuzz-HVCB_label_map.pbtxt
+
+STAGE 2/6: Loading pretrained model...
+  Pretrained model ready
+
+STAGE 3/6: Configuring training pipeline...
+  Detected 1 classes: ['pollen']
+
+STAGE 4/6: Training model...
+----------------------------------------
+  Starting validation evaluation thread...
+  Validation thread started (will evaluate at each checkpoint)
+  Progress check #1: No loss data yet
+  Progress check #2: No loss data yet
+  Progress check #3: No loss data yet
+  Progress check #4: No loss data yet
+    Train event files: ['events.out.tfevents.1790440355.modal.2.0.v2']
+  Progress check #5: No loss data yet
+    Train event files: ['events.out.tfevents.1790440355.modal.2.0.v2']
+  TensorBoard val tags: ['eval_side_by_side_0_0', 'DetectionBoxes_Precision/mAP', 'DetectionBoxes_Precision/mAP@.50IOU', 'DetectionBoxes_Precision/mAP@.75IOU', 'DetectionBoxes_Precision/mAP (small)', 'DetectionBoxes_Precision/mAP (medium)', 'DetectionBoxes_Precision/mAP (large)', 'DetectionBoxes_Recall/AR@1', 'DetectionBoxes_Recall/AR@10', 'DetectionBoxes_Recall/AR@100']
+  TensorBoard train tags: ['train_input_images', 'steps_per_sec', 'Loss/localization_loss', 'Loss/classification_loss', 'Loss/regularization_loss', 'Loss/total_loss', 'learning_rate']
+  Step 50/500 - Train Loss: 0.3556 | Val: 0.8265
+  Step 75/500 - Train Loss: 0.2506 | Val: 0.8265
+  Step 125/500 - Train Loss: 0.1819 | Val: 0.0558
+  Step 150/500 - Train Loss: 0.0699 | Val: 0.0558
+  Step 200/500 - Train Loss: 0.1202 | Val: 0.0558
+  Step 250/500 - Train Loss: 0.0379 | Val: 0.0287
+  Step 275/500 - Train Loss: 0.0284 | Val: 0.0287
+  Step 325/500 - Train Loss: 0.0284 | Val: 0.0189
+  Step 350/500 - Train Loss: 0.0194 | Val: 0.0189
+  Step 400/500 - Train Loss: 0.0359 | Val: 0.0189
+  Step 425/500 - Train Loss: 0.0236 | Val: 0.0183
+  Step 475/500 - Train Loss: 0.0273 | Val: 0.0183
+  Waiting for final validation evaluation...
+  Step 500/500 - Train Loss: 0.0467 | Val: 0.0183
+  Eval thread completed normally
+----------------------------------------
+Training complete
+
+  Extracting training metrics...
+  Captured 20 training loss values
+  Captured 5 validation loss values
+  Training loss progression:
+    Step     25: 0.4676
+    Step    150: 0.0699
+    Step    275: 0.0284
+    Step    400: 0.0359
+    Step    500: 0.0467
+  Minimum training loss: 0.0194 at step 350
+STAGE 5/6: Exporting model...
+  Exported to: /tmp/limelight_train_f6quqowe/exported/saved_model
+  Converting to float TFLite...
+
+STAGE 6/6: Quantizing and compiling...
+  Extracting calibration images from training data...
+  Extracted 5 calibration images
+  Found 5 sample images for quantization
+  Inspecting saved model...
+  Model output 0: shape=[ 1 10], dtype=<class 'numpy.float32'>
+  Model output 1: shape=[ 1 10  4], dtype=<class 'numpy.float32'>
+  Model output 2: shape=[1], dtype=<class 'numpy.float32'>
+  Model output 3: shape=[ 1 10], dtype=<class 'numpy.float32'>
+  Running INT8 quantization...
+  INT8 quantization successful!
+  INT8 model: 4.96 MB
+  Compiling for Coral EdgeTPU...
+  Coral model: 5.28 MB
+
+============================================================
+TRAINING COMPLETE
+============================================================
+  Generating training loss graph...
+    Training loss range: 0.0194 to 0.4676
+    Validation loss range: 0.0183 to 0.8265
+  Loss graph generated (91.8 KB)
+  Saving results to storage...
