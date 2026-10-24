@@ -79,7 +79,7 @@ public class Constants {
     });
 
     /** Builds the Follower : the object that actually drives our paths. */
-    public static Follower create(HardwareMap hardwardeMap) {
+    public static Follower createFollower(HardwareMap hardwardeMap) {
         return new Follower(
                 new PinpointLocalizer(hardwardeMap, localizerConfig),
                 new Mecanum(hardwardeMap, drivetrainConfig),
