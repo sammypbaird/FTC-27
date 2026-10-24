@@ -32,7 +32,8 @@ public class Constants {
     });
 
 
-    // The goBILDA Pinpoint. Values from last season's robot (same hardware).
+    // The goBILDA Pinpoint. Offsets measured on this year's robot with a tape measure.
+    // Run the Pinpoint Tuner to check them (Week 17 of the curriculum).
     public static PinpointConfig localizerConfig = new PinpointConfig(c -> {
         c.name.set("pinpoint");   // name in the robot configuration
         c.podType.set(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
@@ -40,8 +41,8 @@ public class Constants {
         // Where the pods are, from the center of the robot, in INCHES.
         //   xPodOffset: how far LEFT of center the forward pod is (right = negative)
         //   yPodOffset: how far FORWARD of center the sideways pod is (back = negative)
-        c.xPodOffset.set(-3.5);   // forward pod is 3.5" to the right of center
-        c.yPodOffset.set(6.75);   // sideways pod is 6.75" in front of center
+        c.xPodOffset.set(2.9);    // forward pod is 2.9" to the LEFT of center (measured this year)
+        c.yPodOffset.set(5.75);   // sideways pod is 5.75" in front of center (measured this year)
 
         // Which way each pod counts. Pushing forward should make X go UP,
         // pushing left should make Y go UP. If not, flip FORWARD <-> REVERSED.
