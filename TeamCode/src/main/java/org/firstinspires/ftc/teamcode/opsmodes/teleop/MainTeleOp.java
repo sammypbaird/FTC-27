@@ -51,16 +51,16 @@ public class MainTeleOp extends LinearOpMode {
             driver.teleopDrive(gamepad1);
 
             // Intake. Hold right bumper to pull pieces in, left bumper to push them out.
-            if (gamepad1.right_bumper) {
+            if (gamepad2.right_bumper) {
                 intake.in();
-            } else if (gamepad1.left_bumper) {
+            } else if (gamepad2.left_bumper) {
                 intake.out();
             } else {
                 intake.stop();
             }
 
             // Flywheel. Hold A to spin it.
-            if (gamepad1.a) {
+            if (gamepad2.a) {
                 flywheel.spin();
             } else {
                 flywheel.stop();
@@ -69,9 +69,9 @@ public class MainTeleOp extends LinearOpMode {
             // Transfer. Two buttons use it, so ONE if/else decides what it does.
             // (If each button set the transfer on its own, the second one would
             // undo the first in the same loop.)
-            if (gamepad1.left_bumper) {
+            if (gamepad2.left_bumper) {
                 transfer.out();   // pushing out: carry pieces back to the intake
-            } else if (gamepad1.a) {
+            } else if (gamepad2.a) {
                 transfer.run();   // launching: feed pieces into the flywheel
             } else {
                 transfer.stop();
