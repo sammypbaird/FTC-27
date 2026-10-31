@@ -29,7 +29,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Transfer;
  *   D-pad up (press)    flywheel power +10% (max 100%)
  *   D-pad down (press)  flywheel power -10% (min 10%)
  *
- * LIGHT: the RGB indicator turns green while shooting (A held).
+ * LIGHT: the RGB indicator is green while shooting (A held) and red while
+ * pushing pieces out (left bumper held).
  *
  * The bumpers and A are "hold-to-run": let go and that part stops.
  * If the left bumper and A are both held, pushing out wins for the transfer.
@@ -81,13 +82,20 @@ public class MainTeleOp extends LinearOpMode {
                 flywheel.decreasePower();
             }
 
-            // Flywheel. Hold A to spin it, and the light turns green so the
-            // drivers can see we're shooting.
+            // Flywheel. Hold A to spin it.
             if (gamepad2.a) {
                 flywheel.spin();
-                indicator.green();
             } else {
                 flywheel.stop();
+            }
+
+            // Indicator light. Same order as the transfer below, so the light
+            // always matches what the transfer is doing.
+            if (gamepad2.left_bumper) {
+                indicator.red();      // pushing pieces out
+            } else if (gamepad2.a) {
+                indicator.green();    // shooting
+            } else {
                 indicator.off();
             }
 
@@ -95,9 +103,9 @@ public class MainTeleOp extends LinearOpMode {
             // (If each button set the transfer on its own, the second one would
             // undo the first in the same loop.)
             if (gamepad2.left_bumper) {
-                transfer.out();   // pushing out: carry pieces back to the intake
+                transfer.backward();   // pushing out: carry pieces back to the intake
             } else if (gamepad2.a) {
-                transfer.run();   // launching: feed pieces into the flywheel
+                transfer.forward();   // launching: feed pieces into the flywheel
             } else {
                 transfer.stop();
             }

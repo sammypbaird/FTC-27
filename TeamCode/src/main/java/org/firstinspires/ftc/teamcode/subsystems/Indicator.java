@@ -18,6 +18,7 @@ public class Indicator {
 
     private static final double OFF = 0.0;
     private static final double GREEN = 0.5;
+    private static final double RED = 0.277;
 
     private final Servo light;
 
@@ -35,5 +36,10 @@ public class Indicator {
     /** Turn the light off. */
     public void off() {
         light.setPosition(OFF);
+    }
+
+    /** Turn the light red. */
+    public void red() {
+        light.setPosition(RED);
     }
 }
