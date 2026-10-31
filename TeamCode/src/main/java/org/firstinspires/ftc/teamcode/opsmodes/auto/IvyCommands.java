@@ -12,7 +12,24 @@ import com.pedropathing.paths.Path;
 import com.pedropathing.utils.Angle;
 
 
-public class AutoMoves {
+/*
+ * IVY COMMANDS -- all of our robot's commands for autonomous, in one place
+ * -------------------------------------------------------------------------
+ * Each method gives back a Command for Ivy to run. Line them up with
+ * sequential(...) and Ivy runs them one after another.
+ *
+ *   IvyCommands commands = new IvyCommands(follower);
+ *   Command auto = sequential(
+ *       commands.drive(somePath),
+ *       commands.turn(somePose),
+ *       commands.hold(somePose));
+ *
+ * Every command should have a time limit, so a bump or a stuck POLLEN
+ * can't freeze the whole autonomous. Keep each group of commands under its
+ * own heading below (DRIVING, and later SHOOTING, INTAKE...) so it stays
+ * easy to find things.
+ */
+public class IvyCommands {
 
     // A turn is "done" within 3 degrees. Too small, and the robot can
     // wiggle back and forth forever without ever finishing (last season!).
@@ -24,10 +41,15 @@ public class AutoMoves {
 
     private final Follower follower;
 
-    public AutoMoves(Follower follower) {
+    public IvyCommands(Follower follower) {
         this.follower = follower;
     }
 
+    // ---------------------------------------------------------------------
+    // DRIVING
+    // ---------------------------------------------------------------------
+
+    /** Drive along a path. Finishes at the end of the path, or after the time limit. */
     public Command drive(Path path) {
         return PedroCommands.follow(follower, path).setEnd(how -> {
             // If the time limit cut us off, stop right where we are.

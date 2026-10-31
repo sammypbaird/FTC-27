@@ -17,12 +17,12 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 public class AutoOp extends LinearOpMode {
 
     private final Pose start = new Pose(0,0,0);
-    private final Pose end = new Pose(2, 0, 0);
+    private final Pose end = new Pose(4, 4, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
         Follower follower = Constants.createFollower(hardwareMap);
-        AutoMoves moves = new AutoMoves(follower);
+        IvyCommands moves = new IvyCommands(follower);
 
         // THE PLAN: one move after another.
         // ".constant(heading)" keeps the robot facing one way for the whole path.
