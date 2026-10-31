@@ -12,16 +12,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import static com.pedropathing.api.Paths.line;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
-import org.firstinspires.ftc.teamcode.subsystems.Driver;
-import org.firstinspires.ftc.teamcode.subsystems.Flywheel;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Transfer;
 
 @Autonomous(name = "Auto")
 public class AutoOp extends LinearOpMode {
 
     private final Pose start = new Pose(0,0,0);
-    private final Pose end = new Pose(24, 0, 0);
+    private final Pose end = new Pose(2, 0, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
