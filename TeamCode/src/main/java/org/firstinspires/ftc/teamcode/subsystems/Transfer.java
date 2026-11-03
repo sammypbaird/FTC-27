@@ -15,9 +15,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class Transfer {
 
-    // How fast the transfer spins, from 0 (stopped) to 1 (full power).
-    private static final double TRANSFER_POWER = 1.0;
-
     private final DcMotorEx motor;
 
     // What the transfer is doing right now, so we can show it on telemetry
@@ -35,14 +32,19 @@ public class Transfer {
     }
 
     /** Carry pieces toward the flywheel. */
-    public void run() {
-        motor.setPower(TRANSFER_POWER);
+    public void forward() {
+        motor.setPower(1.0);
         state = "running";
     }
 
     /** Run backwards, carrying pieces back toward the intake. */
-    public void out() {
-        motor.setPower(-TRANSFER_POWER);
+    public void backward() {
+        motor.setPower(-1.0);
+        state = "out";
+    }
+
+    public void backwardHalfPower() {
+        motor.setPower(-0.5);
         state = "out";
     }
 

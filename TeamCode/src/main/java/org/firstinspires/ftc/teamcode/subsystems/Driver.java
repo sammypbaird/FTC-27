@@ -24,6 +24,15 @@ public class Driver {
     private final DcMotorEx backRight;
     private static final double SLOW_MODE_SCALE = 0.5;
 
+    // Powers for the slow "nudge" buttons on the d-pad, from 0 to 1.
+    // Strafing needs a little more power than driving forward to get moving.
+    private static final double NUDGE_DRIVE_POWER = 0.3;
+    private static final double NUDGE_STRAFE_POWER = 0.4;
+
+    // Turning power when a trigger is pressed ALL the way. Pressing it
+    // halfway gives half of this, so the harder you press, the faster you turn.
+    private static final double TRIGGER_TURN_MAX = 0.5;
+
     // We store the maxPower so that we can show it on telemetry
     private double maxPower;
 
@@ -51,6 +60,32 @@ public class Driver {
         double axial  = -gamepad.left_stick_y;  //-1 to 1
         double lateral = gamepad.left_stick_x;
         double yaw = gamepad.right_stick_x;
+
+        // Slow, exact moves for lining up ("nudges"). While one of these
+        // buttons is held, it replaces the stick for that direction.
+        //   D-pad up/down:    drive forward/backward slowly
+        //   D-pad left/right: strafe left/right slowly
+        //   Triggers:         turn slowly; press harder to turn faster
+        //                     (left trigger = left, right trigger = right)
+        if (gamepad.dpad_up) {
+            axial = NUDGE_DRIVE_POWER;
+        } else if (gamepad.dpad_down) {
+            axial = -NUDGE_DRIVE_POWER;
+        }
+
+        if (gamepad.dpad_right) {
+            lateral = NUDGE_STRAFE_POWER;
+        } else if (gamepad.dpad_left) {
+            lateral = -NUDGE_STRAFE_POWER;
+        }
+
+        // Each trigger goes from 0.0 (not pressed) to 1.0 (pressed all the way).
+        // Right minus left: + turns clockwise (right), - turns counterclockwise
+        // (left), and pressing both the same amount cancels out.
+        double triggerTurn = (gamepad.right_trigger - gamepad.left_trigger) * TRIGGER_TURN_MAX;
+        if (triggerTurn != 0) {
+            yaw = triggerTurn;
+        }
 
         if (gamepad.xWasPressed()) {
             slowModeEnabled = !slowModeEnabled;
