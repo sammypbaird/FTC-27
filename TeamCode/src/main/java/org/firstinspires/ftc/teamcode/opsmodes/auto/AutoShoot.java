@@ -17,6 +17,12 @@ import org.firstinspires.ftc.teamcode.subsystems.Flywheel;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Transfer;
 
+/*
+ * AUTO SHOOT -- shoot the balls we start with, collect more, shoot again, then park.
+ *
+ * preselectTeleOp means that when auto ends, the Driver Station picks MainTeleOp
+ * for us, so the drivers only have to press INIT and START.
+ */
 @Autonomous(name = "Auto Shoot", preselectTeleOp = "MainTeleOp")
 public class AutoShoot extends LinearOpMode {
 
@@ -24,6 +30,8 @@ public class AutoShoot extends LinearOpMode {
     private static final double INTAKE_MS = 2000;
 
     // Every spot the robot visits, in order. Pose(x, y, heading).
+    //   x and y are in INCHES, measured from where the robot starts (0, 0).
+    //   heading is in RADIANS, so we write Math.toRadians(degrees) to use degrees.
     // !!! PLACEHOLDERS: measure these on the field with Pinpoint Check!! :)
     private final Pose start = new Pose(0, 0, 0);                              // where we set the robot down
     private final Pose aimAtGoal = new Pose(3.9, 2, Math.toRadians(18.2));     // turned to line up the shot
@@ -41,6 +49,9 @@ public class AutoShoot extends LinearOpMode {
         IvyCommands commands = new IvyCommands(follower, flywheel, transfer, intake);
 
         // THE PLAN: one step after another.
+        // Building the plan here does NOT move the robot. It's just a list of
+        // steps. Nothing happens until we schedule it after START.
+        // line(a, b) is a straight path from spot a to spot b.
         // ".constant(heading)" keeps the robot facing one way for the whole path.
         Command auto = sequential(
                 // Shoot the balls we start with
@@ -70,11 +81,14 @@ public class AutoShoot extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        ElapsedTime timer = new ElapsedTime();
-        follower.setPose(start);
-        Scheduler.reset();
-        Scheduler.schedule(auto);
+        ElapsedTime timer = new ElapsedTime();   // counts up from 0 starting now
+        follower.setPose(start);                 // tell Pedro where the robot is
+        Scheduler.reset();                       // clear out leftover steps from the last run
+        Scheduler.schedule(auto);                // hand Ivy the plan
 
+        // This loop runs many times a second until the match ends. Every pass,
+        // Pedro and Ivy each do a tiny bit of work. If we forget to call them,
+        // the robot just sits there.
         while (opModeIsActive()) {
             follower.update(); // Pedro: read the odometry and set the motor powers
             Scheduler.execute(); // Ivy: run the current step, move on when it's done

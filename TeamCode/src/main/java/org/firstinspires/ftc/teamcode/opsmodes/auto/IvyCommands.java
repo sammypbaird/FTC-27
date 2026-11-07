@@ -30,6 +30,16 @@ import org.firstinspires.ftc.teamcode.subsystems.Transfer;
  *       commands.shootSequence(),
  *       commands.hold(somePose));
  *
+ * IVY BUILDING BLOCKS (cheat sheet)
+ *   instant(x)        do x once, finish right away (like turning a motor on)
+ *   waitMs(ms)        do nothing for ms milliseconds, then finish
+ *   waitUntil(check)  keep checking, finish once check is true
+ *   sequential(a, b)  run a, then b, then ...
+ *   a.then(b)         same as sequential(a, b)
+ *   a.raceWith(b)     run a and b at the same time; when either one
+ *                     finishes, stop the other. We race a step against
+ *                     waitMs(...) to give it a time limit.
+ *
  * Every command should have a time limit, so a bump or a stuck ball can't
  * freeze the whole autonomous. Keep each group of commands under its own
  * heading below (DRIVING, SHOOTING, INTAKE) so it stays easy to find things.
@@ -67,6 +77,8 @@ public class IvyCommands {
 
     /** Drive along a path. Finishes at the end of the path, or after the time limit. */
     public Command drive(Path path) {
+        // setEnd runs when this step ends. "how" tells us WHY it ended:
+        // it reached the end of the path, or the time limit cut it off.
         return PedroCommands.follow(follower, path).setEnd(how -> {
             // If the time limit cut us off, stop right where we are.
             if (how == EndCondition.INTERRUPTED) {
