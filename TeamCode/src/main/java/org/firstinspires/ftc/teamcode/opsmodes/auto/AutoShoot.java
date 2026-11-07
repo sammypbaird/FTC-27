@@ -20,16 +20,16 @@ import org.firstinspires.ftc.teamcode.subsystems.Transfer;
 @Autonomous(name = "Auto Shoot", preselectTeleOp = "MainTeleOp")
 public class AutoShoot extends LinearOpMode {
 
-    //how long each shooting step lasts, in milliseconds.
+    // How long to keep collecting after driving through the balls, in milliseconds.
     private static final double INTAKE_MS = 2000;
 
     // Every spot the robot visits, in order. Pose(x, y, heading).
     // !!! PLACEHOLDERS: measure these on the field with Pinpoint Check!! :)
-    private final Pose start = new Pose(0,0,0);                                // where we set the robot down
+    private final Pose start = new Pose(0, 0, 0);                              // where we set the robot down
     private final Pose aimAtGoal = new Pose(3.9, 2, Math.toRadians(18.2));     // turned to line up the shot
     private final Pose beforeCollecting = new Pose(6, 50, 0);                  // just before the balls, intake on
-    private final Pose afterCollecting = new Pose(0, 50, 0);                   // drove through the balls
-    private final Pose lineUpToPark = new Pose(114,0,0);                       // straight out from the park spot
+    private final Pose afterCollecting = new Pose(0, 50, 0);                   // pick up the balls
+    private final Pose lineUpToPark = new Pose(114, 0, 0);                     // straight out from the park spot
     private final Pose park = new Pose(114, 47, 0);                            // final parking spot
 
     @Override
@@ -38,25 +38,31 @@ public class AutoShoot extends LinearOpMode {
         Flywheel flywheel = new Flywheel(hardwareMap);
         Transfer transfer = new Transfer(hardwareMap);
         Intake intake = new Intake(hardwareMap);
-        IvyCommands commands = new IvyCommands(follower, flywheel,transfer, intake);
+        IvyCommands commands = new IvyCommands(follower, flywheel, transfer, intake);
 
-        //THE PLANNNNN: one step after another
+        // THE PLAN: one step after another.
+        // ".constant(heading)" keeps the robot facing one way for the whole path.
         Command auto = sequential(
-                commands.hold(start),
-                commands.startFlywheel(0),
+                // Shoot the balls we start with
+                commands.startFlywheel(), // speeds up while we turn
                 commands.turn(aimAtGoal),
                 commands.shootSequence(),
 
+                // Collect more balls
                 commands.drive(line(aimAtGoal, beforeCollecting)),
                 commands.intakeOn(),
                 commands.drive(line(beforeCollecting, afterCollecting)),
                 waitMs(INTAKE_MS),
+                commands.intakeOff(),
 
+                // Go back and shoot them
                 commands.drive(line(afterCollecting, aimAtGoal)),
                 commands.turn(aimAtGoal), // face the goal again before shooting
                 commands.shootSequence(),
+
+                // Park
                 commands.drive(line(aimAtGoal, lineUpToPark)),
-                commands.drive(line(lineUpToPark, park).constant(Math.toRadians(0))),
+                commands.drive(line(lineUpToPark, park).constant(0)),
                 commands.hold(park)
         );
 
@@ -69,7 +75,7 @@ public class AutoShoot extends LinearOpMode {
         Scheduler.reset();
         Scheduler.schedule(auto);
 
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
             follower.update(); // Pedro: read the odometry and set the motor powers
             Scheduler.execute(); // Ivy: run the current step, move on when it's done
 
@@ -83,10 +89,10 @@ public class AutoShoot extends LinearOpMode {
             telemetry.update();
         }
 
-        //AUTO is overrrrr, make sure everything is stopped
+        // Auto is over: make sure everything is stopped.
         follower.stop();
         flywheel.stop();
         transfer.stop();
-
+        intake.stop();
     }
 }

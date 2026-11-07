@@ -46,12 +46,12 @@ public class Flywheel {
         state = "spinning";
     }
 
-    /** Spin 10% faster next time (up to 100%). */
+    /** Spin 5% faster next time (up to 100%). */
     public void increasePower() {
         setPower(power + POWER_STEP);
     }
 
-    /** Spin 10% slower next time (down to 10%). */
+    /** Spin 5% slower next time (down to 10%). */
     public void decreasePower() {
         setPower(power - POWER_STEP);
     }

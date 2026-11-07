@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opsmodes.auto;
 
+import static com.pedropathing.api.Paths.line;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 
 import com.pedropathing.follower.Follower;
@@ -9,8 +10,6 @@ import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import static com.pedropathing.api.Paths.line;
-
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Flywheel;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -19,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Transfer;
 @Autonomous(name = "Auto-just park")
 public class AutoJustParkOp extends LinearOpMode {
 
-    private final Pose start = new Pose(0,0,0);
+    private final Pose start = new Pose(0, 0, 0);
     private final Pose end = new Pose(4, 4, 0);
 
     @Override
@@ -30,14 +29,14 @@ public class AutoJustParkOp extends LinearOpMode {
         Intake intake = new Intake(hardwareMap);
         IvyCommands moves = new IvyCommands(follower, flywheel, transfer, intake);
 
-        // THE PLAN: one move after another.
+        // THE PLAN: one step after another.
         // ".constant(heading)" keeps the robot facing one way for the whole path.
         Command auto = sequential(
                 moves.drive(line(start, end).constant(0)),
                 moves.hold(end)
         );
 
-        telemetry.addLine("Ready. Press START");
+        telemetry.addLine("Ready. Press START.");
         telemetry.update();
         waitForStart();
 
@@ -46,8 +45,8 @@ public class AutoJustParkOp extends LinearOpMode {
         Scheduler.schedule(auto);
 
         while (opModeIsActive()) {
-            follower.update(); // Pedro updates the odometry readings
-            Scheduler.execute(); // Ivy: run the current command, move on when it's done
+            follower.update(); // Pedro: read the odometry and set the motor powers
+            Scheduler.execute(); // Ivy: run the current step, move on when it's done
 
             Pose pose = follower.pose();
             telemetry.addData("X (in)", "%.1f", pose.x());

@@ -17,23 +17,22 @@ import org.firstinspires.ftc.teamcode.subsystems.Flywheel;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Transfer;
 
-
 /*
  * IVY COMMANDS -- all of our robot's commands for autonomous, in one place
  * -------------------------------------------------------------------------
  * Each method gives back a Command for Ivy to run. Line them up with
  * sequential(...) and Ivy runs them one after another.
  *
- *   IvyCommands commands = new IvyCommands(follower);
+ *   IvyCommands commands = new IvyCommands(follower, flywheel, transfer, intake);
  *   Command auto = sequential(
  *       commands.drive(somePath),
  *       commands.turn(somePose),
+ *       commands.shootSequence(),
  *       commands.hold(somePose));
  *
- * Every command should have a time limit, so a bump or a stuck POLLEN
- * can't freeze the whole autonomous. Keep each group of commands under its
- * own heading below (DRIVING, and later SHOOTING, INTAKE...) so it stays
- * easy to find things.
+ * Every command should have a time limit, so a bump or a stuck ball can't
+ * freeze the whole autonomous. Keep each group of commands under its own
+ * heading below (DRIVING, SHOOTING, INTAKE) so it stays easy to find things.
  */
 public class IvyCommands {
 
@@ -45,9 +44,10 @@ public class IvyCommands {
     public static final double DRIVE_TIMEOUT_MS = 4000;
     public static final double TURN_TIMEOUT_MS = 2000;
 
-    private static final double LAUNCH_MS = 3000;
-    private static final double UNJAM_MS = 1000;
-    private static final double SPINUP_MS = 500;
+    // How long each shooting step lasts, in milliseconds.
+    private static final double LAUNCH_MS = 3000;   // feeding balls into the flywheel
+    private static final double UNJAM_MS = 1000;    // running the transfer backward
+    private static final double SPINUP_MS = 500;    // letting the flywheel get back up to speed
 
     private final Follower follower;
     private final Flywheel flywheel;
@@ -77,12 +77,16 @@ public class IvyCommands {
 
     /** Move to a spot and face a direction. Same x and y as now = turn in place. */
     public Command turn(Pose target) {
-        return PedroCommands.hold(follower, target)            // start turning
-                .then(waitUntil(() -> isHeadingWithinTolerance(target))           // wait until we face the right way
-                        .raceWith(waitMs(TURN_TIMEOUT_MS)));    // ...but not forever
+        return PedroCommands.hold(follower, target)                         // start turning
+                .then(waitUntil(() -> isHeadingWithinTolerance(target))     // wait until we face the right way
+                        .raceWith(waitMs(TURN_TIMEOUT_MS)));                // ...but not forever
     }
 
-    /** Hold still at a spot, so the robot doesn't drift. */
+    /**
+     * Hold still at a spot, so the robot doesn't drift. This command finishes
+     * right away, and Pedro keeps holding the spot in the background until the
+     * next drive or turn.
+     */
     public Command hold(Pose target) {
         return PedroCommands.hold(follower, target);
     }
@@ -92,16 +96,13 @@ public class IvyCommands {
         return Angle.smallestDifference(follower.pose().heading(), target.heading()) < TURN_TOLERANCE;
     }
 
-    // ------------------------------------------------
+    // ---------------------------------------------------------------------
     // SHOOTING
-    // ------------------------------------------------
+    // ---------------------------------------------------------------------
 
-    /** Start the flywheel It keeps spinning until stop.Flywheel(). */
-    public Command startFlywheel(double ms){
-        return sequential(
-                instant(flywheel::spin),
-                waitMs(ms)
-        );
+    /** Start the flywheel. It keeps spinning until stopFlywheel(). */
+    public Command startFlywheel() {
+        return instant(flywheel::spin);
     }
 
     /** Stop the flywheel. It coasts to a stop. */
@@ -109,9 +110,12 @@ public class IvyCommands {
         return instant(flywheel::stop);
     }
 
-    /** Run the transfer FORWARD for some time, launching balls through the spinning flywheel. */
+    /**
+     * Launch balls for ms: the intake and transfer push balls into the
+     * spinning flywheel. Turns all three off when done.
+     */
     public Command launchBalls(double ms) {
-        return sequential (
+        return sequential(
                 instant(transfer::forward),
                 instant(flywheel::spin),
                 instant(intake::in),
@@ -122,34 +126,37 @@ public class IvyCommands {
         );
     }
 
-    /** Run the transfer BACKWARD for some time to free a stuck ball. */
+    /** Run the transfer BACKWARD for ms to free a stuck ball. */
     public Command unjam(double ms) {
-        return sequential (
+        return sequential(
                 instant(transfer::backward),
                 waitMs(ms),
                 instant(transfer::stop)
         );
     }
 
-    public Command shootSequence(){
+    /** Shoot everything we're holding: launch, clear any jam, spin back up, launch again. */
+    public Command shootSequence() {
         return sequential(
                 launchBalls(LAUNCH_MS),
                 unjam(UNJAM_MS),
-                startFlywheel(SPINUP_MS),
+                startFlywheel(),
+                waitMs(SPINUP_MS),
                 launchBalls(LAUNCH_MS)
         );
     }
 
-    //------------------
-    //INTAKE
-    //----------------------------------------
+    // ---------------------------------------------------------------------
+    // INTAKE
+    // ---------------------------------------------------------------------
 
+    /** Turn the intake on to pull balls in. It keeps running until intakeOff(). */
     public Command intakeOn() {
         return instant(intake::in);
     }
 
+    /** Turn the intake off. */
     public Command intakeOff() {
         return instant(intake::stop);
     }
-
 }
