@@ -23,14 +23,14 @@ public class AutoShoot extends LinearOpMode {
     //how long each shooting step lasts, in milliseconds.
     private static final double INTAKE_MS = 2000;
 
-    //The parking path
+    // Every spot the robot visits, in order. Pose(x, y, heading).
     // !!! PLACEHOLDERS: measure these on the field with Pinpoint Check!! :)
-    private final Pose start = new Pose(0,0,0);
-    private final Pose shootTurn = new Pose(3.9, 2, Math.toRadians(18.2));
-    private final Pose preCollect = new Pose(6, 50, 0);
-    private final Pose collecting = new Pose(0, 50, 0);
-    private final Pose turnSpot = new Pose(114,0,0);
-    private final Pose park = new Pose(114, 47, 0);
+    private final Pose start = new Pose(0,0,0);                                // where we set the robot down
+    private final Pose aimAtGoal = new Pose(3.9, 2, Math.toRadians(18.2));     // turned to line up the shot
+    private final Pose beforeCollecting = new Pose(6, 50, 0);                  // just before the balls, intake on
+    private final Pose afterCollecting = new Pose(0, 50, 0);                   // drove through the balls
+    private final Pose lineUpToPark = new Pose(114,0,0);                       // straight out from the park spot
+    private final Pose park = new Pose(114, 47, 0);                            // final parking spot
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -44,18 +44,19 @@ public class AutoShoot extends LinearOpMode {
         Command auto = sequential(
                 commands.hold(start),
                 commands.startFlywheel(0),
-                commands.turn(shootTurn),
+                commands.turn(aimAtGoal),
                 commands.shootSequence(),
 
-                commands.drive(line(shootTurn, preCollect)),
+                commands.drive(line(aimAtGoal, beforeCollecting)),
                 commands.intakeOn(),
-                commands.drive(line(preCollect, collecting)),
+                commands.drive(line(beforeCollecting, afterCollecting)),
                 waitMs(INTAKE_MS),
 
-                commands.drive(line(collecting, shootTurn)),
+                commands.drive(line(afterCollecting, aimAtGoal)),
+                commands.turn(aimAtGoal), // face the goal again before shooting
                 commands.shootSequence(),
-                commands.drive(line(collecting, turnSpot)),
-                commands.drive(line(turnSpot, park).constant(Math.toRadians(0))),
+                commands.drive(line(aimAtGoal, lineUpToPark)),
+                commands.drive(line(lineUpToPark, park).constant(Math.toRadians(0))),
                 commands.hold(park)
         );
 
