@@ -8,13 +8,16 @@ import com.pedropathing.ivy.Scheduler;
 import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import static com.pedropathing.api.Paths.line;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.Flywheel;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Transfer;
 
-@Autonomous(name = "Auto")
-public class AutoOp extends LinearOpMode {
+@Autonomous(name = "Auto-just park")
+public class AutoJustParkOp extends LinearOpMode {
 
     private final Pose start = new Pose(0,0,0);
     private final Pose end = new Pose(4, 4, 0);
@@ -22,7 +25,10 @@ public class AutoOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Follower follower = Constants.createFollower(hardwareMap);
-        IvyCommands moves = new IvyCommands(follower);
+        Flywheel flywheel = new Flywheel(hardwareMap);
+        Transfer transfer = new Transfer(hardwareMap);
+        Intake intake = new Intake(hardwareMap);
+        IvyCommands moves = new IvyCommands(follower, flywheel, transfer, intake);
 
         // THE PLAN: one move after another.
         // ".constant(heading)" keeps the robot facing one way for the whole path.

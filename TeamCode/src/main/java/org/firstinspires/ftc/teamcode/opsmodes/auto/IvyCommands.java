@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.opsmodes.auto;
 
+import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.commands.Commands.waitUntil;
+import static com.pedropathing.ivy.groups.Groups.sequential;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ivy.Command;
@@ -10,6 +12,10 @@ import com.pedropathing.ivy.pedro.PedroCommands;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.pedropathing.utils.Angle;
+
+import org.firstinspires.ftc.teamcode.subsystems.Flywheel;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Transfer;
 
 
 /*
@@ -39,10 +45,20 @@ public class IvyCommands {
     public static final double DRIVE_TIMEOUT_MS = 4000;
     public static final double TURN_TIMEOUT_MS = 2000;
 
-    private final Follower follower;
+    private static final double LAUNCH_MS = 3000;
+    private static final double UNJAM_MS = 1000;
+    private static final double SPINUP_MS = 500;
 
-    public IvyCommands(Follower follower) {
+    private final Follower follower;
+    private final Flywheel flywheel;
+    private final Transfer transfer;
+    private final Intake intake;
+
+    public IvyCommands(Follower follower, Flywheel flywheel, Transfer transfer, Intake intake) {
         this.follower = follower;
+        this.flywheel = flywheel;
+        this.transfer = transfer;
+        this.intake = intake;
     }
 
     // ---------------------------------------------------------------------
@@ -75,4 +91,65 @@ public class IvyCommands {
     private boolean isHeadingWithinTolerance(Pose target) {
         return Angle.smallestDifference(follower.pose().heading(), target.heading()) < TURN_TOLERANCE;
     }
+
+    // ------------------------------------------------
+    // SHOOTING
+    // ------------------------------------------------
+
+    /** Start the flywheel It keeps spinning until stop.Flywheel(). */
+    public Command startFlywheel(double ms){
+        return sequential(
+                instant(flywheel::spin),
+                waitMs(ms)
+        );
+    }
+
+    /** Stop the flywheel. It coasts to a stop. */
+    public Command stopFlywheel() {
+        return instant(flywheel::stop);
+    }
+
+    /** Run the transfer FORWARD for some time, launching balls through the spinning flywheel. */
+    public Command launchBalls(double ms) {
+        return sequential (
+                instant(transfer::forward),
+                instant(flywheel::spin),
+                instant(intake::in),
+                waitMs(ms),
+                instant(transfer::stop),
+                instant(flywheel::stop),
+                instant(intake::stop)
+        );
+    }
+
+    /** Run the transfer BACKWARD for some time to free a stuck ball. */
+    public Command unjam(double ms) {
+        return sequential (
+                instant(transfer::backward),
+                waitMs(ms),
+                instant(transfer::stop)
+        );
+    }
+
+    public Command shootSequence(){
+        return sequential(
+                launchBalls(LAUNCH_MS),
+                unjam(UNJAM_MS),
+                startFlywheel(SPINUP_MS),
+                launchBalls(LAUNCH_MS)
+        );
+    }
+
+    //------------------
+    //INTAKE
+    //----------------------------------------
+
+    public Command intakeOn() {
+        return instant(intake::in);
+    }
+
+    public Command intakeOff() {
+        return instant(intake::stop);
+    }
+
 }
