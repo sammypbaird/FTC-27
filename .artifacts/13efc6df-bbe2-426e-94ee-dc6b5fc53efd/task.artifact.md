@@ -1,0 +1,4 @@
+- [ ] Setup Limelight and indicator in MainAutoMode
+- [ ] Implement search-and-approach logic in MainAutoMode
+- [ ] Sequence intake, shoot, and reverse logic
+- [ ] Test and verify build and functionality

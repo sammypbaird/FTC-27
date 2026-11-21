@@ -15,19 +15,19 @@ import org.firstinspires.ftc.teamcode.fp_code.subsystems.Driver;
 public class GoToPollenOp extends LinearOpMode {
     private static final double MIN_CONFIDENCE = 0.5;
 
-    // Negated gains to correct inverted direction towards detected target
-    private static final double TURN_GAIN = -0.010;
-    private static final double STRAFE_GAIN = -0.015;
-    private static final double FORWARD_GAIN = 0.04;
-
+    // Toned down turning gain and maximum turning power to stop aggressive spinning
+    private static final double TURN_GAIN = 0.010;
     private static final double MAX_TURN = 0.12;
+
+    private static final double FORWARD_GAIN = 0.04;
     private static final double MAX_FORWARD = 0.20;
     private static final double DESIRED_AREA = 15.0;
     private static final double INTAKE_DRIVE_INCHES = 5.0;
     private static final double TICKS_PER_INCH = 50.0;
 
-    // Controlled search turn speed
+    // Toned down searching spin speed
     private static final double FAST_SEARCH_TURN_SPEED = 0.12;
+    private static final double STRAFE_GAIN = 0.015;
     private static final int REQUIRED_FRAMES = 3;
 
     private boolean goToPollenActive = false;
@@ -39,7 +39,7 @@ public class GoToPollenOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Driver driver = new Driver(hardwareMap);
 
-        // Ensure motor brake mode is active
+        // Active brake mode to eliminate coasting when power reaches 0
         driver.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -75,7 +75,7 @@ public class GoToPollenOp extends LinearOpMode {
                     double tx = pollen.getTargetXDegrees();
                     double ta = pollen.getTargetArea();
 
-                    // Deadband check: skip turn power if target is within 1.5 degrees of center
+                    // Deadband check: don't apply turn power if error is less than 1.5 degrees
                     double yaw = 0;
                     if (Math.abs(tx) > 1.5) {
                         yaw = Range.clip(tx * TURN_GAIN, -MAX_TURN, MAX_TURN);
