@@ -23,14 +23,14 @@ public class MainAutoMode extends LinearOpMode {
     // Step up in +X first before moving to the shooting spot to avoid hitting the wall
     private static final double PRE_SHOOT_X = 12.0;
     private static final double PRE_SHOOT_Y = 0.0;
-    private static final double PRE_SHOOT_HEADING_DEG = 324.8;
+    private static final double PRE_SHOOT_HEADING_DEG = 331.7;
 
-    // First shooting pose (inches and degrees)
-    private static final double SHOOT_X = 0.4;
-    private static final double SHOOT_Y = 14.5;
-    private static final double SHOOT_HEADING_DEG = 324.8;
+    // Shooting pose (inches and degrees)
+    private static final double SHOOT_X = 1.8;
+    private static final double SHOOT_Y = 38.9;
+    private static final double SHOOT_HEADING_DEG = 331.7;
 
-    // Final destination after shooting (replaces returning to 0, 0)
+    // Park location after shooting (unchanged)
     private static final double END_X = 94.6;
     private static final double END_Y = 50.0;
     private static final double END_HEADING_DEG = 3.4;
@@ -111,7 +111,7 @@ public class MainAutoMode extends LinearOpMode {
 
         odometry = new PinpointLocalizer(hardwareMap, Constants.localizerConfig);
 
-        telemetry.addLine("MainAutoMode READY - +X Step -> (0.4, 14.5) @ 324.8 deg -> (94.6, 50.0) @ 3.4 deg");
+        telemetry.addLine("MainAutoMode READY - +X Step -> (1.8, 38.9) @ 331.7 deg -> Park (94.6, 50.0) @ 3.4 deg");
         telemetry.addLine("Keep the robot still, then press START");
         telemetry.update();
 
@@ -128,12 +128,12 @@ public class MainAutoMode extends LinearOpMode {
         sleep(40);
         odometry.update();
 
-        // 1. Go up in +X axis first before moving to (0.4, 14.5) so it doesn't hit the wall
+        // 1. Go up in +X axis first before moving to (1.8, 38.9) so it doesn't hit the wall
         if (hasTimeForShootingAndEnd()) {
             driveToPose("Step +X First", PRE_SHOOT_X, PRE_SHOOT_Y, PRE_SHOOT_HEADING_DEG, false, 3500);
         }
         if (hasTimeForShootingAndEnd()) {
-            driveToPose("Move to Shoot (0.4, 14.5)", SHOOT_X, SHOOT_Y, SHOOT_HEADING_DEG, true, 5000);
+            driveToPose("Move to Shoot (1.8, 38.9)", SHOOT_X, SHOOT_Y, SHOOT_HEADING_DEG, true, 5000);
         }
         if (hasTimeForShootingAndEnd()) {
             driveToPose("Lock Shoot Pose", SHOOT_X, SHOOT_Y, SHOOT_HEADING_DEG, true, 1600);
@@ -144,7 +144,7 @@ public class MainAutoMode extends LinearOpMode {
             shootSet("Set 1", true);
         }
 
-        // 3. Brief feeder unstick & re-lock onto (0.4, 14.5) @ 324.8 deg
+        // 3. Brief feeder unstick & re-lock onto (1.8, 38.9) @ 331.7 deg
         if (hasTimeForShootingAndEnd()) {
             intakeMotor.setPower(INTAKE_OUT_POWER);
             transferMotor.setPower(TRANSFER_BACKWARD_POWER);
@@ -165,7 +165,7 @@ public class MainAutoMode extends LinearOpMode {
 
         stopShooterAndFeeders();
 
-        // 5. Move to final target (94.6, 50.0) at 3.4 deg instead of returning to (0, 0)
+        // 5. Move to park pose (94.6, 50.0) at 3.4 deg before 30s ends
         moveToFinalPose();
 
         odometry.update();
@@ -215,7 +215,7 @@ public class MainAutoMode extends LinearOpMode {
     private void moveToFinalPose() throws InterruptedException {
         long remainingMs = remainingBudgetMs();
         if (remainingMs > 200) {
-            driveToPose("Go to (94.6, 50.0) @ 3.4 deg", END_X, END_Y, END_HEADING_DEG, false, remainingMs);
+            driveToPose("Park (94.6, 50.0) @ 3.4 deg", END_X, END_Y, END_HEADING_DEG, false, remainingMs);
         }
         driver.stop();
     }
