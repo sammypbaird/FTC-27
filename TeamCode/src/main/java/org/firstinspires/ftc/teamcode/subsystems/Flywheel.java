@@ -17,7 +17,7 @@ public class Flywheel {
     // Flywheel power, from 0 (stopped) to 1 (full power). The operator can
     // change it during the match with increasePower() and decreasePower().
     private static final double STARTING_POWER = 1.0;
-    private static final double POWER_STEP = 0.1;   // 10% per button press
+    private static final double POWER_STEP = 0.05;   // 5% per button press
     private static final double MIN_POWER = 0.1;    // never below 10%, or spin() would do nothing
     private static final double MAX_POWER = 1.0;    // motors can't go above 100%
 
@@ -46,22 +46,19 @@ public class Flywheel {
         state = "spinning";
     }
 
-    /** Spin 10% faster next time (up to 100%). */
+    /** Spin 5% faster next time (up to 100%). */
     public void increasePower() {
         setPower(power + POWER_STEP);
     }
 
-    /** Spin 10% slower next time (down to 10%). */
+    /** Spin 5% slower next time (down to 10%). */
     public void decreasePower() {
         setPower(power - POWER_STEP);
     }
 
     private void setPower(double newPower) {
         // Range.clip keeps the number between MIN_POWER and MAX_POWER.
-        newPower = Range.clip(newPower, MIN_POWER, MAX_POWER);
-        // Round to the nearest 10%. Computers store 0.1 slightly wrong, so
-        // without this, 0.1 + 0.1 + 0.1 can turn into 0.30000000000000004.
-        power = Math.round(newPower * 10) / 10.0;
+        power = Range.clip(newPower, MIN_POWER, MAX_POWER);
     }
 
     /** Turn off the flywheel. It coasts to a stop. */
